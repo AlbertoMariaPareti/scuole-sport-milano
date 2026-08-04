@@ -1,0 +1,25 @@
+# Dati scaricati a runtime dal portale open data del Comune di Milano.
+# Non vanno versionati: il repo contiene il codice, i dati arrivano dalla fonte.
+data/
+
+# Nota: docs/index.html E' generato ma VA committato — e' la mappa che
+# GitHub Pages pubblica. Stessa cosa per images/.
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Strumenti
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Sistema operativo / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

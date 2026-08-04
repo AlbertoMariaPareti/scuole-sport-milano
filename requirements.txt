@@ -1,0 +1,9 @@
+geopandas>=1.0
+folium>=0.16
+requests>=2.31
+
+# Serve solo per l'anteprima PNG del README.
+matplotlib>=3.8
+
+# Serve solo alla versione server (app.py); la mappa statica non ne ha bisogno.
+flask>=3.0

@@ -31,11 +31,11 @@ def mappa():
         return "Il parametro 'raggio' deve essere un numero intero di metri.", 400
 
     if not RAGGIO_MIN <= raggio <= RAGGIO_MAX:
-        return (
+        messaggio = (
             f"Raggio fuori intervallo: usa un valore fra {RAGGIO_MIN} e "
-            f"{RAGGIO_MAX} metri.",
-            400,
+            f"{RAGGIO_MAX} metri."
         )
+        return messaggio, 400
 
     scuole, sport = carica_dati()
     vicine = scuole_vicine(scuole, sport, raggio)

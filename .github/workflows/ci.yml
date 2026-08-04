@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  qualita:
+    name: Lint e generazione mappa
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Installa le dipendenze
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install ruff
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Formattazione
+        run: ruff format --check .
+
+      # Import e route senza avviare il server: intercetta gli errori di
+      # sintassi e di import, che sono quelli che rompono il repo per chi lo
+      # clona senza che nessuno se ne accorga.
+      - name: Controlla che gli entry point si importino
+        run: |
+          python -c "import ast,sys; [ast.parse(open(f, encoding='utf-8').read(), f) for f in ['analisi.py','genera_mappa.py','app.py','esercizi/mappa_mondo.py']]; print('sintassi ok')"
+
+      # I dati arrivano da un portale esterno: se e' irraggiungibile il job non
+      # deve risultare rosso per una causa che non dipende dal codice.
+      - name: Genera la mappa end-to-end
+        id: mappa
+        continue-on-error: true
+        run: |
+          python genera_mappa.py --output /tmp/index.html --anteprima /tmp/anteprima.png --csv /tmp/scuole.csv
+          test -s /tmp/index.html
+          test -s /tmp/scuole.csv
+
+      - name: Avviso se i dati non erano raggiungibili
+        if: steps.mappa.outcome == 'failure'
+        run: echo "::warning::La mappa non e' stata generata (portale open data non raggiungibile)."

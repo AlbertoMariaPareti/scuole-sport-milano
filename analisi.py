@@ -168,6 +168,20 @@ def costruisci_mappa(
     gruppo_scuole.add_to(mappa)
     folium.LayerControl(collapsed=False).add_to(mappa)
 
+    # Folium genera una pagina senza <title>: senza questo, la scheda del
+    # browser e le anteprime dei link mostrano l'URL nudo.
+    titolo = (
+        f"Scuole e impianti sportivi a Milano — {len(vicine_wgs)} scuole "
+        f"con un impianto entro {raggio} m"
+    )
+    mappa.get_root().header.add_child(
+        folium.Element(
+            f"<title>{titolo}</title>\n"
+            f'<meta name="description" content="{titolo}. '
+            f'Dati aperti del Comune di Milano.">'
+        )
+    )
+
     return mappa
 
 
